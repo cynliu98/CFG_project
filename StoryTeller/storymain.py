@@ -16,7 +16,7 @@ m = sr.Microphone()
 
 # Root Widget
 output = None
-outputsize = None
+outputindex = 0; outputsize = None
 savenum = 1
 class Root(BoxLayout):
     pass
@@ -25,12 +25,7 @@ class RecordButton(Button):
     #hold output for displaying by Textinput
     output = StringProperty('')
 
-    #other variables
-    if outputsize == None:
-        outputsize = '16dp'
-
     def record(self):
-        self.outputsize = outputsize
         self.savenum = int(savenum)
         
         #audio capture
@@ -71,8 +66,7 @@ class RecordButton(Button):
 
         self.savenum += 1
         global savenum
-        savenum = self.savenum #updates global variable
-
+        savenum =  self.savenum #updates global variable
 
 class PlayButton(Button):
     #take the value from the text input and play it as audio
@@ -81,11 +75,22 @@ class PlayButton(Button):
         engine.say(text)
         engine.runAndWait()
 
-class SmallButton(Button):
-    #make text small
-    def small(self,text):
-        outputsize = '12dp'
-        #do we need to refresh?
+class SizetxtButton(Button):
+    outputsize = '12dp'
+
+    #rotate through text sizes
+    def sizetxt(self):
+        global outputindex
+        if outputindex % 4 == 0:
+            self.outputsize = '16dp' #normal
+        elif outputindex % 4 == 1:
+            self.outputsize = '22dp' #large
+        elif outputindex % 4 == 2:
+            self.outputsize = '28dp' #extra large
+
+        outputindex += 1
+        global outputsize
+        outputsize = self.outputsize
 
 class StoryApp(App):
     def build(self):
@@ -100,3 +105,5 @@ class StoryApp(App):
 #Execute from the command line
 if __name__ == '__main__':
     StoryApp().run()
+                          
+
